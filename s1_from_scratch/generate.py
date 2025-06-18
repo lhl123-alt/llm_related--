@@ -1,4 +1,5 @@
-from vllm import LLM, SamplingParams
+#用/DeepSeek-R1-Distill-Qwen-1.5B     来进行思考过程的 控制------->预算强制 的方法 
+from vllm import LLM, SamplingParams   #用vllm来测试
 from transformers import AutoTokenizer
 
 tokenizer = AutoTokenizer.from_pretrained("/home/user/Downloads/DeepSeek-R1-Distill-Qwen-1.5B")
@@ -21,10 +22,11 @@ outputs = llm.generate(
 print(f'原始输出：{prompt}{outputs[0].outputs[0].text}')
 print('+'*20)
 
+
 sampling_params = SamplingParams(
     temperature=0,
     max_tokens=32768,
-    stop='</think>',
+    stop='</think>',      #添加一个 停用词  </think>
     skip_special_tokens=False
 )
 
@@ -32,9 +34,9 @@ outputs = llm.generate(
         prompt,
         sampling_params
     )
-wait = 'Wait'
+wait = 'Wait'   #设置 特殊表示  来     继续思考-------->控制思考过程
 for i in range(1):
-    prompt += outputs[0].outputs[0].text + wait
+    prompt += outputs[0].outputs[0].text + wait   #添加 到 生成 文本后面
 
     outputs = llm.generate(
         prompt,
